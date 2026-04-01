@@ -67,7 +67,7 @@
       data-cursor-hover
     >
       <span class="logo-bracket">[</span>
-      <span class="logo-text">Portfolio</span>
+      <span class="logo-text">Portafolio</span>
       <span class="logo-bracket">]</span>
     </a>
     

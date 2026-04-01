@@ -4,8 +4,8 @@
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
   
   // Components
+  import Preloader from './lib/components/Preloader.svelte'
   import SmoothScroll from './lib/components/SmoothScroll.svelte'
-  import Cursor from './lib/components/Cursor.svelte'
   import Navigation from './lib/components/Navigation.svelte'
   import Hero from './lib/components/Hero.svelte'
   import About from './lib/components/About.svelte'
@@ -15,6 +15,17 @@
   import Contact from './lib/components/Contact.svelte'
   
   gsap.registerPlugin(ScrollTrigger)
+  
+  // State
+  let isLoading = $state(true)
+  
+  function handlePreloaderComplete() {
+    isLoading = false
+    // Refresh ScrollTrigger after preloader
+    setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 100)
+  }
   
   // Pinned section data
   const featuredWork = [
@@ -69,8 +80,11 @@
   ]
 </script>
 
+{#if isLoading}
+  <Preloader onComplete={handlePreloaderComplete} />
+{/if}
+
 <SmoothScroll />
-<Cursor />
 <Navigation />
 
 <main>

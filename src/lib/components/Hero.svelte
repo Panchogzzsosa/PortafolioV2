@@ -9,38 +9,79 @@
   let titleRef
   let subtitleRef
   let ctaRef
-  let orbRef
+  
+  // Scramble effect configuration
+  const chars = '!<>-_\\/[]{}—=+*^?#________'
+  const finalTitle = 'DESARROLLADOR'
+  const finalSubtitle = 'Full Stack'
+  
+  let displayTitle = $state('')
+  let displaySubtitle = $state('')
+  let showCursor = $state(true)
+  let isScrambling = $state(true)
   
   onMount(() => {
-    const triggers = []
+    // Scramble text effect
+    const scrambleText = (finalText, setDisplay, duration = 2000) => {
+      return new Promise((resolve) => {
+        let iteration = 0
+        const totalIterations = finalText.length * 3
+        const interval = duration / totalIterations
+        
+        const intervalId = setInterval(() => {
+          setDisplay(
+            finalText
+              .split('')
+              .map((char, index) => {
+                if (index < iteration / 3) {
+                  return finalText[index]
+                }
+                return chars[Math.floor(Math.random() * chars.length)]
+              })
+              .join('')
+          )
+          
+          iteration++
+          
+          if (iteration >= totalIterations) {
+            clearInterval(intervalId)
+            setDisplay(finalText)
+            resolve()
+          }
+        }, interval)
+      })
+    }
     
-    // Initial entrance animation
-    const tl = gsap.timeline({ delay: 0.3 })
+    // Run scramble effects
+    const runAnimations = async () => {
+      await scrambleText(finalTitle, (text) => displayTitle = text, 2500)
+      await new Promise(r => setTimeout(r, 300))
+      await scrambleText(finalSubtitle, (text) => displaySubtitle = text, 1500)
+      isScrambling = false
+      
+      // Animate other elements after text scramble
+      gsap.fromTo('.hero-description',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }
+      )
+      
+      gsap.fromTo('.hero-actions',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out', delay: 0.2 }
+      )
+      
+      gsap.fromTo('.hero-meta',
+        { opacity: 0 },
+        { opacity: 1, duration: 1, delay: 0.5 }
+      )
+    }
     
-    tl.fromTo('.hero-eyebrow', 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }
-    )
-    .fromTo('.title-word',
-      { opacity: 0, y: 100, rotateX: -40 },
-      { opacity: 1, y: 0, rotateX: 0, duration: 1, stagger: 0.1, ease: 'expo.out' },
-      '-=0.4'
-    )
-    .fromTo('.hero-description',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' },
-      '-=0.6'
-    )
-    .fromTo('.hero-actions',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' },
-      '-=0.4'
-    )
-    .fromTo('.scroll-hint',
-      { opacity: 0 },
-      { opacity: 1, duration: 0.8 },
-      '-=0.2'
-    )
+    runAnimations()
+    
+    // Cursor blink
+    const cursorInterval = setInterval(() => {
+      showCursor = !showCursor
+    }, 530)
     
     // Parallax on scroll
     const st = ScrollTrigger.create({
@@ -50,89 +91,83 @@
       scrub: true,
       onUpdate: (self) => {
         const progress = self.progress
-        gsap.set(titleRef, { y: progress * 150 })
-        gsap.set(subtitleRef, { y: progress * 100 })
-        gsap.set(ctaRef, { y: progress * 50 })
-        gsap.set(orbRef, { 
-          y: progress * 200,
-          scale: 1 + progress * 0.5,
-          opacity: 1 - progress
-        })
+        gsap.set(titleRef, { y: progress * 100 })
       }
     })
     
-    triggers.push(st)
-    
-    // Mouse parallax for orb
-    const handleMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 30
-      const y = (e.clientY / window.innerHeight - 0.5) * 30
-      gsap.to(orbRef, {
-        x,
-        y,
-        duration: 1,
-        ease: 'power2.out'
-      })
-    }
-    
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    
     return () => {
-      triggers.forEach(t => t.kill())
-      window.removeEventListener('mousemove', handleMouseMove)
+      clearInterval(cursorInterval)
+      st.kill()
     }
   })
 </script>
 
 <section bind:this={heroRef} id="hero" class="hero">
-  <!-- Background gradient orb -->
-  <div bind:this={orbRef} class="gradient-orb"></div>
+  <!-- Animated code lines background -->
+  <div class="code-lines">
+    {#each Array(20) as _, i}
+      <div class="code-line" style="--delay: {i * 0.1}s; --left: {Math.random() * 100}%">
+        <span class="code-text">
+          {Array(30).fill(0).map(() => chars[Math.floor(Math.random() * chars.length)]).join('')}
+        </span>
+      </div>
+    {/each}
+  </div>
   
-  <!-- Grid pattern -->
-  <div class="grid-pattern"></div>
+  <!-- Grid overlay -->
+  <div class="grid-overlay"></div>
+  
+  <!-- Scan line effect -->
+  <div class="scan-line"></div>
   
   <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span class="eyebrow-line"></span>
-      <span class="eyebrow-text">Desarrollador Full Stack</span>
+    <!-- Meta info -->
+    <div class="hero-meta">
+      <span class="meta-item">FRANCISCO_GONZALEZ_SOSA</span>
+      <span class="meta-divider">//</span>
+      <span class="meta-item">2026</span>
     </div>
     
+    <!-- Main title with scramble effect -->
     <h1 bind:this={titleRef} class="hero-title">
-      <span class="title-word">Creando</span>
-      <span class="title-word title-word-accent">experiencias</span>
-      <span class="title-word">digitales</span>
+      <span class="title-line">
+        <span class="scramble-text">{displayTitle}</span>
+        <span class="cursor" class:blink={showCursor && !isScrambling}>_</span>
+      </span>
+      <span class="subtitle-line">
+        <span class="scramble-text scramble-secondary">{displaySubtitle}</span>
+      </span>
+
     </h1>
     
-    <p bind:this={subtitleRef} class="hero-description">
-      Transformo ideas en productos digitales excepcionales. 
-      Especializado en crear interfaces que no solo funcionan, 
-      sino que se sienten intuitivas y memorables.
+    <!-- Description -->
+    <p class="hero-description">
+      Diseño y desarrollo soluciones tecnológicas escalables con enfoque en 
+      performance, usabilidad y arquitectura limpia.
     </p>
     
+    <!-- CTA Buttons -->
     <div bind:this={ctaRef} class="hero-actions">
-      <a href="#projects" class="btn btn-primary" data-cursor-hover>
-        <span class="btn-text">Ver proyectos</span>
-        <span class="btn-arrow">→</span>
+      <a href="#projects" class="btn btn-primary">
+        <span class="btn-bracket">[</span>
+        <span class="btn-text">VER_PROYECTOS</span>
+        <span class="btn-bracket">]</span>
       </a>
-      <a href="#contact" class="btn btn-secondary" data-cursor-hover>
-        Contactar
+      <a href="#contact" class="btn btn-secondary">
+        <span class="btn-bracket">[</span>
+        <span class="btn-text">CONTACTAR</span>
+        <span class="btn-bracket">]</span>
       </a>
     </div>
   </div>
   
-  <!-- Scroll indicator -->
-  <div class="scroll-hint">
-    <div class="scroll-mouse">
-      <div class="scroll-wheel"></div>
-    </div>
-    <span class="scroll-text">Scroll</span>
+  <div class="scroll-indicator">
+    <span class="scroll-text">SCROLL</span>
+    <span class="scroll-arrow">↓</span>
   </div>
   
-  <!-- Corner decorations -->
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
+  <!-- Glitch overlay -->
+  <div class="glitch-overlay"></div>
 </section>
 
 <style>
@@ -144,121 +179,182 @@
     justify-content: center;
     padding: 2rem;
     overflow: hidden;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, #0a0a0f 100%);
   }
 
-  /* Gradient orb background */
-  .gradient-orb {
+  /* Code lines background */
+  .code-lines {
     position: absolute;
-    top: 20%;
-    right: 10%;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(
-      circle at 30% 30%,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 40%,
-      transparent 70%
-    );
-    border-radius: 50%;
+    inset: 0;
+    overflow: hidden;
     pointer-events: none;
-    will-change: transform, opacity;
-    filter: blur(40px);
   }
 
-  /* Grid pattern */
-  .grid-pattern {
+  .code-line {
+    position: absolute;
+    left: var(--left);
+    top: -100%;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.25);
+    white-space: nowrap;
+    animation: fall 10s linear infinite;
+    animation-delay: var(--delay);
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    letter-spacing: 0.3em;
+  }
+
+  @keyframes fall {
+    0% {
+      top: -20%;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      top: 120%;
+      opacity: 0;
+    }
+  }
+
+  /* Grid overlay */
+  .grid-overlay {
     position: absolute;
     inset: 0;
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
     pointer-events: none;
+  }
+
+  /* Scan line */
+  .scan-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.1), 
+      transparent
+    );
+    animation: scan 4s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scan {
+    0% { top: -10%; }
+    100% { top: 110%; }
   }
 
   .hero-content {
     position: relative;
-    z-index: 1;
-    max-width: 1000px;
+    z-index: 10;
+    max-width: 1200px;
     text-align: center;
-    perspective: 1000px;
   }
 
-  /* Eyebrow */
-  .hero-eyebrow {
-    display: inline-flex;
+  /* Meta info */
+  .hero-meta {
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .eyebrow-line {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-dim));
-  }
-
-  .eyebrow-text {
+    margin-bottom: 3rem;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
+    color: var(--text-muted);
+    opacity: 0;
+  }
+
+  .meta-divider {
+    color: var(--border-hover);
   }
 
   /* Title */
   .hero-title {
-    font-size: clamp(3rem, 12vw, 8rem);
+    font-size: clamp(2.5rem, 8vw, 6rem);
     font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
     margin-bottom: 2rem;
   }
 
-  .title-word {
+  .title-line,
+  .subtitle-line {
     display: block;
-    transform-origin: center bottom;
-    will-change: transform, opacity;
+    position: relative;
   }
 
-  .title-word-accent {
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.5) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .scramble-text {
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+  }
+
+  .scramble-secondary {
+    font-size: 0.6em;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 0.3em;
+  }
+
+  .cursor {
+    display: inline-block;
+    color: var(--accent);
+    animation: none;
+  }
+
+  .cursor.blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  .cursor-secondary {
+    color: var(--text-muted);
+    font-size: 0.6em;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
   }
 
   /* Description */
   .hero-description {
-    font-size: 1.25rem;
-    font-weight: 300;
+    font-size: 1.125rem;
     color: var(--text-secondary);
-    max-width: 550px;
+    max-width: 600px;
     margin: 0 auto 3rem;
     line-height: 1.8;
-    will-change: transform, opacity;
+    opacity: 0;
   }
 
   /* Actions */
   .hero-actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
-    will-change: transform, opacity;
+    opacity: 0;
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1.1rem 2.2rem;
-    font-size: 0.9375rem;
-    font-weight: 500;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.15em;
     text-decoration: none;
-    border-radius: 100px;
-    transition: all 0.4s var(--ease-expo-out);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
   }
@@ -267,155 +363,159 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-expo-out);
+    z-index: -1;
   }
 
   .btn:hover::before {
-    transform: translateX(100%);
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
   .btn-primary {
-    background-color: var(--accent);
-    color: var(--bg-primary);
+    color: var(--text-primary);
   }
 
   .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.15);
-  }
-
-  .btn-primary:active {
-    transform: scale(0.97);
-  }
-
-  .btn-arrow {
-    transition: transform 0.3s var(--ease-expo-out);
-  }
-
-  .btn:hover .btn-arrow {
-    transform: translateX(6px);
+    color: var(--bg-primary);
+    border-color: var(--accent);
   }
 
   .btn-secondary {
-    background-color: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: transparent;
   }
 
   .btn-secondary:hover {
+    color: var(--bg-primary);
     border-color: var(--text-secondary);
-    background-color: rgba(255, 255, 255, 0.03);
-    transform: translateY(-3px);
   }
 
-  /* Scroll hint */
-  .scroll-hint {
+  .btn-secondary:hover::before {
+    background: var(--text-secondary);
+  }
+
+  .btn-bracket {
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+  }
+
+  .btn:hover .btn-bracket {
+    color: inherit;
+  }
+
+  /* Corner info */
+  .corner-info {
     position: absolute;
-    bottom: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .top-left {
+    top: 2rem;
+    left: 2rem;
+  }
+
+  .top-right {
+    top: 2rem;
+    right: 2rem;
+  }
+
+  .bottom-left {
+    bottom: 2rem;
+    left: 2rem;
+  }
+
+  .bottom-right {
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  .info-label {
+    color: var(--text-muted);
+  }
+
+  .info-value {
+    color: var(--text-secondary);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
-  }
-
-  .scroll-mouse {
-    width: 26px;
-    height: 42px;
-    border: 1.5px solid var(--text-muted);
-    border-radius: 13px;
-    display: flex;
-    justify-content: center;
-    padding-top: 10px;
-  }
-
-  .scroll-wheel {
-    width: 4px;
-    height: 8px;
-    background-color: var(--text-secondary);
-    border-radius: 2px;
-    animation: scrollWheel 2s ease-in-out infinite;
-  }
-
-  @keyframes scrollWheel {
-    0%, 100% { 
-      transform: translateY(0);
-      opacity: 1;
-    }
-    50% { 
-      transform: translateY(10px);
-      opacity: 0.3;
-    }
-  }
-
-  .scroll-text {
+    gap: 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
+    letter-spacing: 0.2em;
     color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.3s ease;
   }
 
-  /* Corner decorations */
-  .corner {
+  .scroll-indicator:hover {
+    color: var(--accent);
+  }
+
+  .scroll-arrow {
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* Glitch effect */
+  .glitch-overlay {
     position: absolute;
-    width: 60px;
-    height: 60px;
-    border: 1px solid var(--border);
-    opacity: 0.5;
-  }
-
-  .corner-tl {
-    top: 2rem;
-    left: 2rem;
-    border-right: none;
-    border-bottom: none;
-  }
-
-  .corner-tr {
-    top: 2rem;
-    right: 2rem;
-    border-left: none;
-    border-bottom: none;
-  }
-
-  .corner-bl {
-    bottom: 2rem;
-    left: 2rem;
-    border-right: none;
-    border-top: none;
-  }
-
-  .corner-br {
-    bottom: 2rem;
-    right: 2rem;
-    border-left: none;
-    border-top: none;
+    inset: 0;
+    background: linear-gradient(
+      transparent 50%,
+      rgba(255, 255, 255, 0.02) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.3;
   }
 
   /* Responsive */
   @media (max-width: 768px) {
     .hero {
-      padding: 6rem 1.5rem 4rem;
+      padding: 6rem 1.5rem;
     }
 
-    .gradient-orb {
-      width: 400px;
-      height: 400px;
-      top: 10%;
-      right: -20%;
+    .hero-meta {
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .corner {
+    .meta-divider {
+      display: none;
+    }
+
+    .corner-info {
       display: none;
     }
 
     .hero-actions {
       flex-direction: column;
-      width: 100%;
     }
 
     .btn {

@@ -2,352 +2,237 @@
   import { onMount } from 'svelte'
   import { gsap } from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import TextReveal from './TextReveal.svelte'
   
   gsap.registerPlugin(ScrollTrigger)
   
   let sectionRef
+  let containerRef
   
-  const stats = [
-    { number: '5+', label: 'Años de experiencia' },
-    { number: '50+', label: 'Proyectos completados' },
-    { number: '30+', label: 'Clientes satisfechos' },
-    { number: '100%', label: 'Compromiso' }
+  const slides = [
+    {
+      number: '01',
+      title: 'Francisco González',
+      subtitle: 'Desarrollador Full Stack',
+      description: 'Especializado en crear soluciones digitales escalables con enfoque en performance y experiencia de usuario.'
+    },
+    {
+      number: '02',
+      title: '1+ Año',
+      subtitle: 'De experiencia',
+      description: 'Construyendo productos digitales para startups y empresas. Desde MVPs hasta plataformas empresariales complejas.'
+    },
+    {
+      number: '03',
+      title: '14+ Proyectos',
+      subtitle: 'Entregados',
+      description: 'Cada proyecto es una oportunidad para crear algo que trascienda. Código limpio, arquitectura sólida, resultados medibles.'
+    },
+    {
+      number: '04',
+      title: '10+ Clientes',
+      subtitle: 'Satisfechos',
+      description: 'Relaciones a largo plazo basadas en confianza, comunicación transparente y entrega constante de valor.'
+    }
   ]
   
   onMount(() => {
-    const triggers = []
-    
-    // Section tag animation
-    gsap.fromTo('.about-tag',
-      { opacity: 0, x: -30 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: 'expo.out',
+    const ctx = gsap.context(() => {
+      const cards = containerRef.querySelectorAll('.slide-card')
+      
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          start: 'top top',
+          end: `+=${slides.length * 100}%`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
         }
-      }
-    )
-    
-    // Description paragraphs stagger
-    gsap.fromTo('.about-text p',
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'expo.out',
-        scrollTrigger: {
-          trigger: '.about-text',
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
+      })
+      
+      cards.forEach((card, i) => {
+        if (i === 0) {
+          tl.fromTo(card, 
+            { opacity: 0, y: 100, scale: 0.9 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.5 }
+          )
+        } else {
+          tl.to(cards[i - 1], {
+            opacity: 0,
+            y: -100,
+            scale: 0.9,
+            duration: 0.5
+          })
+          .fromTo(card,
+            { opacity: 0, y: 100, scale: 0.9 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.5 },
+            '<'
+          )
         }
-      }
-    )
+      })
+    }, sectionRef)
     
-    // Stats cards animation
-    gsap.fromTo('.stat-card',
-      { opacity: 0, y: 60, scale: 0.9 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'expo.out',
-        scrollTrigger: {
-          trigger: '.about-stats',
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
-        }
-      }
-    )
-    
-    // Parallax effect on stats
-    const st = ScrollTrigger.create({
-      trigger: sectionRef,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 1,
-      onUpdate: (self) => {
-        const cards = document.querySelectorAll('.stat-card')
-        cards.forEach((card, i) => {
-          const speed = 1 + i * 0.1
-          const yPos = self.progress * 50 * speed
-          gsap.set(card, { y: -yPos })
-        })
-      }
-    })
-    
-    triggers.push(st)
-    
-    return () => {
-      triggers.forEach(t => t.kill())
-    }
+    return () => ctx.revert()
   })
 </script>
 
 <section bind:this={sectionRef} id="about" class="about">
-  <div class="about-content">
-    <div class="about-grid">
-      <div class="about-main">
-        <span class="about-tag">Sobre mí</span>
-        
-        <h2 class="about-title">
-          <TextReveal text="Pasión por crear" />
-          <span class="title-secondary">
-            <TextReveal text="productos digitales" className="text-dim" />
-            <TextReveal text="excepcionales" />
-          </span>
-        </h2>
-        
-        <div class="about-text">
-          <p>
-            Soy un desarrollador full-stack con sede en [Tu Ciudad]. 
-            Mi enfoque combina diseño minimalista con funcionalidad robusta, 
-            creando experiencias que dejan una impresión duradera.
-          </p>
-          <p>
-            Creo en el poder de los detalles. Cada línea de código, cada animación, 
-            cada interacción está cuidadosamente considerada para crear algo 
-            que no solo funcione perfectamente, sino que se sienta intuitivo.
-          </p>
-        </div>
-        
-        <a href="#contact" class="about-link" data-cursor-hover>
-          <span>Trabajemos juntos</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-      
-      <div class="about-stats">
-        {#each stats as stat, i}
-          <div class="stat-card" style="--card-index: {i}">
-            <div class="stat-glow"></div>
-            <span class="stat-number">{stat.number}</span>
-            <span class="stat-label">{stat.label}</span>
-          </div>
-        {/each}
-      </div>
+  <div class="about-header">
+    <span class="section-tag">Sobre mí</span>
+    <div class="progress-dots">
+      {#each slides as _, i}
+        <div class="dot"></div>
+      {/each}
     </div>
+  </div>
+  
+  <div bind:this={containerRef} class="slides-container">
+    {#each slides as slide, i}
+      <div class="slide-card">
+        <span class="slide-number">{slide.number}</span>
+        <h2 class="slide-title">{slide.title}</h2>
+        <p class="slide-subtitle">{slide.subtitle}</p>
+        <p class="slide-desc">{slide.description}</p>
+      </div>
+    {/each}
+  </div>
+  
+  <div class="scroll-indicator">
+    <span class="scroll-line"></span>
+    <span class="scroll-text">Scroll</span>
   </div>
 </section>
 
 <style>
   .about {
-    padding: var(--space-3xl) 2rem;
     position: relative;
-    overflow: hidden;
-  }
-
-  .about-content {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: start;
-  }
-
-  /* Main content */
-  .about-main {
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    position: sticky;
-    top: 30vh;
-  }
-
-  .about-tag {
-    display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-  }
-
-  .about-tag::before {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background-color: var(--accent);
-  }
-
-  .about-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-  }
-
-  .title-secondary {
-    display: block;
-    margin-top: 0.25rem;
-  }
-
-  .title-secondary :global(.text-dim) {
-    color: var(--text-secondary) !important;
-  }
-
-  .about-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .about-text p {
-    font-size: 1.0625rem;
-    color: var(--text-secondary);
-    line-height: 1.8;
-  }
-
-  .about-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 1rem;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    transition: gap 0.3s var(--ease-expo-out);
-  }
-
-  .about-link:hover {
-    gap: 1rem;
-  }
-
-  .about-link svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s var(--ease-expo-out);
-  }
-
-  .about-link:hover svg {
-    transform: translate(4px, -4px);
-  }
-
-  /* Stats section */
-  .about-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    padding-top: 4rem;
-  }
-
-  .stat-card {
-    position: relative;
-    padding: 2.5rem;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    justify-content: center;
     overflow: hidden;
-    transition: all 0.5s var(--ease-expo-out);
-    will-change: transform;
+    background: var(--bg-primary);
   }
 
-  .stat-card:nth-child(2) {
-    transform: translateY(40px);
-  }
-
-  .stat-card:nth-child(3) {
-    transform: translateY(-20px);
-  }
-
-  .stat-card:nth-child(4) {
-    transform: translateY(60px);
-  }
-
-  .stat-card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-8px) !important;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-  }
-
-  .stat-glow {
+  .about-header {
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-      circle at 50% 50%,
-      rgba(255, 255, 255, 0.03) 0%,
-      transparent 50%
-    );
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    z-index: 10;
   }
 
-  .stat-card:hover .stat-glow {
-    opacity: 1;
+  .section-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
-  .stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.5) 100%);
+  .progress-dots {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .slides-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide-card {
+    position: absolute;
+    text-align: center;
+    padding: 2rem;
+    will-change: transform, opacity;
+  }
+
+  .slide-number {
+    display: block;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .slide-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    position: relative;
-    z-index: 1;
   }
 
-  .stat-label {
-    font-size: 0.875rem;
+  .slide-subtitle {
+    font-size: 1.25rem;
     color: var(--text-muted);
-    position: relative;
-    z-index: 1;
+    margin-bottom: 1.5rem;
   }
 
-  /* Responsive */
-  @media (max-width: 968px) {
-    .about {
-      padding: var(--space-2xl) 1.5rem;
-    }
-
-    .about-grid {
-      grid-template-columns: 1fr;
-      gap: 4rem;
-    }
-
-    .about-main {
-      position: relative;
-      top: 0;
-    }
-
-    .about-stats {
-      padding-top: 0;
-    }
-
-    .stat-card:nth-child(2),
-    .stat-card:nth-child(3),
-    .stat-card:nth-child(4) {
-      transform: none;
-    }
+  .slide-desc {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
   }
 
-  @media (max-width: 480px) {
-    .about-stats {
-      grid-template-columns: 1fr;
+  .scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--text-muted), transparent);
+    animation: pulse-line 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-line {
+    0%, 100% { opacity: 0.5; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(0.6); }
+  }
+
+  .scroll-text {
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .slide-title {
+      font-size: 2.5rem;
+    }
+
+    .slide-desc {
+      font-size: 1rem;
     }
   }
 </style>

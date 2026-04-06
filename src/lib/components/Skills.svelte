@@ -5,360 +5,289 @@
   
   gsap.registerPlugin(ScrollTrigger)
   
-  let sectionRef
-  
-  const skillCategories = [
-    {
-      title: 'Frontend',
-      skills: [
-        { name: 'React / Next.js', level: 95 },
-        { name: 'Svelte / SvelteKit', level: 90 },
-        { name: 'TypeScript', level: 92 },
-        { name: 'Tailwind CSS', level: 95 },
-        { name: 'Three.js / WebGL', level: 75 }
-      ]
-    },
-    {
-      title: 'Backend',
-      skills: [
-        { name: 'Node.js', level: 90 },
-        { name: 'Python / Django', level: 85 },
-        { name: 'PostgreSQL', level: 88 },
-        { name: 'GraphQL', level: 82 },
-        { name: 'Redis', level: 78 }
-      ]
-    },
-    {
-      title: 'DevOps & Tools',
-      skills: [
-        { name: 'Docker', level: 85 },
-        { name: 'AWS / Vercel', level: 80 },
-        { name: 'Git / CI/CD', level: 90 },
-        { name: 'Linux', level: 85 },
-        { name: 'Figma', level: 88 }
-      ]
-    }
+  const technologies = [
+    { name: 'React', category: 'frontend', color: '#61DAFB' },
+    { name: 'Svelte', category: 'frontend', color: '#FF3E00' },
+    { name: 'JavaScript', category: 'frontend', color: '#F7DF1E' },
+    { name: 'HTML', category: 'frontend', color: '#E34F26' },
+    { name: 'CSS', category: 'frontend', color: '#1572B6' },
+    { name: 'Tailwind', category: 'frontend', color: '#38B2AC' },
+    { name: 'Bootstrap', category: 'frontend', color: '#7952B3' },
+    { name: 'Node.js', category: 'backend', color: '#339933' },
+    { name: 'PHP', category: 'backend', color: '#777BB4' },
+    { name: 'MySQL', category: 'backend', color: '#4479A1' },
+    { name: 'MongoDB', category: 'backend', color: '#47A248' },
+    { name: 'PostgreSQL', category: 'backend', color: '#336791' },
+    { name: 'Docker', category: 'tools', color: '#2496ED' },
+    { name: 'Git', category: 'tools', color: '#F05032' },
+    { name: 'AWS', category: 'tools', color: '#FF9900' }
   ]
   
   onMount(() => {
-    const triggers = []
-    
-    // Header animation
-    gsap.fromTo('.skills-header > *',
-      { opacity: 0, y: 40 },
+    gsap.fromTo('.skills-header',
+      { opacity: 0, y: 50 },
       {
         opacity: 1,
         y: 0,
         duration: 0.8,
-        stagger: 0.1,
         ease: 'expo.out',
         scrollTrigger: {
           trigger: '.skills-header',
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          start: 'top 85%'
         }
       }
     )
     
-    // Cards stagger animation
-    gsap.fromTo('.category-card',
-      { opacity: 0, y: 80, rotateY: -15 },
+    gsap.fromTo('.tech-card',
+      { opacity: 0, scale: 0.9, y: 30 },
       {
         opacity: 1,
+        scale: 1,
         y: 0,
-        rotateY: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'expo.out',
+        duration: 0.6,
+        stagger: 0.05,
+        ease: 'back.out(1.5)',
         scrollTrigger: {
-          trigger: '.skills-grid',
-          start: 'top 75%',
-          toggleActions: 'play none none reverse'
+          trigger: '.tech-grid',
+          start: 'top 80%'
         }
       }
     )
-    
-    // Skill bars animation
-    const bars = document.querySelectorAll('.skill-progress')
-    bars.forEach((bar, i) => {
-      const width = bar.style.getPropertyValue('--skill-level')
-      gsap.fromTo(bar,
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          duration: 1.2,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: bar,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          },
-          delay: i * 0.05
-        }
-      )
-    })
-    
-    return () => {
-      triggers.forEach(t => t.kill())
-    }
   })
+  
+  function handleMouseMove(e, card) {
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    card.style.setProperty('--mouse-x', `${x}px`)
+    card.style.setProperty('--mouse-y', `${y}px`)
+  }
 </script>
 
-<section bind:this={sectionRef} id="skills" class="skills">
-  <div class="skills-content">
+<section id="skills" class="skills">
+  <div class="container">
     <header class="skills-header">
-      <span class="section-tag">Habilidades</span>
-      <h2 class="skills-title">Tecnologías que domino</h2>
-      <p class="skills-subtitle">
-        Stack moderno para crear aplicaciones escalables y de alto rendimiento
-      </p>
+      <span class="section-label">Stack Tecnológico</span>
+      <h2 class="section-title">Tecnologías que<br/>domino</h2>
     </header>
     
-    <div class="skills-grid">
-      {#each skillCategories as category, i}
-        <div class="category-card" style="--card-index: {i}">
-          <div class="card-shine"></div>
-          <h3 class="category-title">{category.title}</h3>
-          
-          <div class="skills-list">
-            {#each category.skills as skill, j}
-              <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">{skill.name}</span>
-                  <span class="skill-percentage">{skill.level}%</span>
-                </div>
-                <div class="skill-bar">
-                  <div 
-                    class="skill-progress" 
-                    style="--skill-level: {skill.level}%"
-                  ></div>
-                </div>
-              </div>
-            {/each}
-          </div>
+    <div class="tech-grid">
+      {#each technologies as tech}
+        <div 
+          class="tech-card {tech.category}"
+          on:mousemove={(e) => handleMouseMove(e, e.currentTarget)}
+          role="button"
+          tabindex="0"
+        >
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          <span class="tech-name">{tech.name}</span>
+          <div class="tech-dot" style="background-color: {tech.color}"></div>
         </div>
       {/each}
     </div>
   </div>
-  
-  <!-- Decorative orbs -->
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
-  <div class="glow-orb orb-3"></div>
 </section>
 
 <style>
   .skills {
-    padding: var(--space-3xl) 2rem;
+    padding: 8rem 2rem;
+    background: var(--bg-primary);
     position: relative;
-    overflow: hidden;
   }
 
-  .skills-content {
-    max-width: 1200px;
+  .container {
+    max-width: 1000px;
     margin: 0 auto;
-    position: relative;
-    z-index: 1;
   }
 
-  /* Header */
   .skills-header {
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
   }
 
-  .section-tag {
+  .section-label {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.2em;
     margin-bottom: 1rem;
   }
 
-  .skills-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+  .section-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 700;
     letter-spacing: -0.03em;
-    margin-bottom: 1rem;
+    line-height: 1.1;
   }
 
-  .skills-subtitle {
-    font-size: 1.125rem;
-    color: var(--text-secondary);
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* Skills Grid */
-  .skills-grid {
+  /* Tech Grid - Bento Style */
+  .tech-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    perspective: 1000px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
   }
 
-  .category-card {
+  .tech-card {
     position: relative;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 2.5rem;
-    transform-style: preserve-3d;
-    transition: all 0.5s var(--ease-expo-out);
-    overflow: hidden;
-  }
-
-  .category-card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-8px) rotateX(5deg);
-    box-shadow: 
-      0 30px 60px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.05);
-  }
-
-  .card-shine {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.03),
-      transparent
-    );
-    transition: left 0.7s ease;
-  }
-
-  .category-card:hover .card-shine {
-    left: 100%;
-  }
-
-  .category-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    z-index: 1;
-  }
-
-  .skills-list {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 1.5rem;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .skill-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .skill-header {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-  }
-
-  .skill-name {
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-  }
-
-  .skill-percentage {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .skill-bar {
-    height: 3px;
-    background-color: var(--bg-secondary);
-    border-radius: 2px;
     overflow: hidden;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease;
   }
 
-  .skill-progress {
-    height: 100%;
-    width: var(--skill-level);
-    background: linear-gradient(90deg, var(--text-secondary), var(--accent));
-    border-radius: 2px;
-    transform-origin: left;
-    will-change: transform;
+  .tech-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
-  /* Glow orbs */
-  .glow-orb {
+  /* Glow effect on hover */
+  .card-glow {
     position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.06),
+      transparent 40%
+    );
+  }
+
+  .tech-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  /* Border glow */
+  .card-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1),
+      transparent 50%,
+      rgba(255, 255, 255, 0.05)
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .tech-card:hover .card-border {
+    opacity: 1;
+  }
+
+  /* Category accent colors */
+  .tech-card.frontend:hover {
+    border-color: rgba(97, 218, 251, 0.3);
+  }
+  
+  .tech-card.backend:hover {
+    border-color: rgba(51, 153, 51, 0.3);
+  }
+  
+  .tech-card.tools:hover {
+    border-color: rgba(242, 78, 30, 0.3);
+  }
+
+  .tech-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    z-index: 1;
+  }
+
+  .tech-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    opacity: 0.4;
+    box-shadow: 0 0 12px currentColor;
+    z-index: 1;
   }
 
-  .orb-1 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
-    top: 10%;
-    left: -10%;
-    animation: float 20s ease-in-out infinite;
+  /* Featured cards (larger) */
+  .tech-card:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: auto;
   }
 
-  .orb-2 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
-    bottom: 20%;
-    right: -5%;
-    animation: float 25s ease-in-out infinite reverse;
+  .tech-card:nth-child(1) .tech-name {
+    font-size: 2rem;
+    font-weight: 700;
   }
 
-  .orb-3 {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: pulse 15s ease-in-out infinite;
+  .tech-card:nth-child(6) {
+    grid-column: span 2;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(30px, -30px); }
-    50% { transform: translate(-20px, 20px); }
-    75% { transform: translate(20px, 30px); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }
+  .tech-card:nth-child(10) {
+    grid-row: span 2;
   }
 
   /* Responsive */
-  @media (max-width: 968px) {
+  @media (max-width: 900px) {
     .skills {
-      padding: var(--space-2xl) 1.5rem;
+      padding: 6rem 1.5rem;
     }
 
-    .skills-grid {
-      grid-template-columns: 1fr;
+    .tech-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
 
-    .category-card {
-      padding: 2rem;
+    .tech-card:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 1;
     }
 
-    .glow-orb {
-      display: none;
+    .tech-card:nth-child(1) .tech-name {
+      font-size: 1.25rem;
+    }
+
+    .tech-card:nth-child(6) {
+      grid-column: span 1;
+    }
+
+    .tech-card:nth-child(10) {
+      grid-row: span 1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .tech-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .tech-card {
+      min-height: 100px;
+      padding: 1rem;
+    }
+
+    .tech-card:nth-child(1) {
+      grid-column: span 2;
+    }
+
+    .tech-name {
+      font-size: 0.875rem;
     }
   }
 </style>

@@ -8,10 +8,10 @@
   let sectionRef
   
   const socialLinks = [
-    { name: 'GitHub', url: 'https://github.com/tuusuario', handle: '@tuusuario' },
-    { name: 'LinkedIn', url: 'https://linkedin.com/in/tuusuario', handle: '/in/tuusuario' },
-    { name: 'Twitter', url: 'https://twitter.com/tuusuario', handle: '@tuusuario' },
-    { name: 'Email', url: 'mailto:tu@email.com', handle: 'tu@email.com' }
+    { name: 'GitHub', url: 'https://github.com/Panchogzzsosa', handle: '@Panchogzzsosa' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/francisco-miguel-gonz%C3%A1lez-sosa-13a46430b/', handle: 'Francisco Miguel González Sosa' },
+    { name: 'WhatsApp', url: 'https://wa.me/8117220005', handle: '+52 81 1722 0005' },
+    { name: 'Email', url: 'mailto:franciscogzz03@gmail.com', handle: 'franciscogzz03@gmail.com' }
   ]
   
   onMount(() => {
@@ -94,16 +94,14 @@
       </h2>
       
       <p class="contact-description">
-        Estoy disponible para colaboraciones, proyectos freelance o 
-        simplemente para charlar sobre tecnología.
       </p>
       
       <a 
-        href="mailto:tu@email.com" 
+        href="https://wa.me/8117220005" 
         class="contact-email"
         data-cursor-hover
       >
-        <span class="email-text">tu@email.com</span>
+        <span class="email-text">+52 81 1722 00005</span>
         <span class="email-arrow">→</span>
       </a>
     </div>
@@ -137,9 +135,7 @@
         <span class="footer-divider">—</span>
         <span>Diseñado y desarrollado con precisión</span>
       </p>
-      <p class="footer-credit">
-        Inspirado en <a href="https://animations.dev" target="_blank" rel="noopener">Emil Kowalski</a>
-      </p>
+
     </div>
   </footer>
 </section>
@@ -345,21 +341,6 @@
 
   .footer-divider {
     opacity: 0.5;
-  }
-
-  .footer-credit {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-  }
-
-  .footer-credit a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .footer-credit a:hover {
-    color: var(--accent);
   }
 
   /* Responsive */

@@ -9,8 +9,7 @@
   import Navigation from './lib/components/Navigation.svelte'
   import Hero from './lib/components/Hero.svelte'
   import About from './lib/components/About.svelte'
-  import PinnedSection from './lib/components/PinnedSection.svelte'
-  import HorizontalScroll from './lib/components/HorizontalScroll.svelte'
+  import Projects from './lib/components/Projects.svelte'
   import Skills from './lib/components/Skills.svelte'
   import Contact from './lib/components/Contact.svelte'
   
@@ -27,57 +26,9 @@
     }, 100)
   }
   
-  // Pinned section data
-  const featuredWork = [
-    {
-      title: 'E-commerce Premium',
-      description: 'Plataforma de comercio electrónico con experiencia de usuario excepcional, conversiones optimizadas y panel de administración intuitivo.',
-      tags: ['Next.js', 'Stripe', 'PostgreSQL', 'Prisma']
-    },
-    {
-      title: 'Dashboard Analytics',
-      description: 'Panel de control en tiempo real con visualizaciones interactivas, reportes automatizados y alertas inteligentes.',
-      tags: ['React', 'D3.js', 'Node.js', 'MongoDB']
-    },
-    {
-      title: 'App Mobile Fintech',
-      description: 'Aplicación bancaria con enfoque en seguridad, usabilidad y transacciones instantáneas con biometría.',
-      tags: ['React Native', 'Firebase', 'TypeScript', 'Plaid']
-    },
-    {
-      title: 'Plataforma SaaS',
-      description: 'Herramienta de gestión de equipos con colaboración en tiempo real, automatizaciones y análisis de productividad.',
-      tags: ['SvelteKit', 'Prisma', 'Redis', 'WebSockets']
-    }
-  ]
+
   
-  // Horizontal scroll data
-  const galleryItems = [
-    {
-      title: 'Diseño UI/UX',
-      description: 'Interfaces intuitivas y atractivas que mejoran la experiencia del usuario.',
-      color: '#8b5cf6',
-      icon: '◆'
-    },
-    {
-      title: 'Desarrollo Full Stack',
-      description: 'Soluciones completas desde el frontend hasta la infraestructura.',
-      color: '#06b6d4',
-      icon: '◈'
-    },
-    {
-      title: 'Optimización Performance',
-      description: 'Aplicaciones rápidas, eficientes y escalables para cualquier escala.',
-      color: '#f59e0b',
-      icon: '◉'
-    },
-    {
-      title: 'Arquitectura Cloud',
-      description: 'Infraestructura moderna, segura y automatizada en la nube.',
-      color: '#ec4899',
-      icon: '◊'
-    }
-  ]
+
 </script>
 
 {#if isLoading}
@@ -92,15 +43,7 @@
   
   <About />
   
-  <!-- Pinned scrolling section -->
-  <PinnedSection 
-    title="Trabajos Destacados"
-    subtitle="Portfolio"
-    items={featuredWork}
-  />
-  
-  <!-- Horizontal scroll section -->
-  <HorizontalScroll items={galleryItems} />
+  <Projects />
   
   <Skills />
   

@@ -56,8 +56,8 @@
     links.forEach(link => {
       link.addEventListener('mousemove', (e) => {
         const rect = link.getBoundingClientRect()
-        const x = e.clientX - rect.left - rect.width / 2
-        const y = e.clientY - rect.top - rect.height / 2
+        const x = e['clientX'] - rect.left - rect.width / 2
+        const y = e['clientY'] - rect.top - rect.height / 2
         
         gsap.to(link, {
           x: x * 0.2,

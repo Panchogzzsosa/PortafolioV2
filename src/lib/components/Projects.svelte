@@ -14,7 +14,7 @@
       description: 'Plataforma de distribución musical digital con panel administrativo completo.',
       category: 'Web Application',
       year: '2024',
-      image: '/img/wwr.png',
+      image: '/img/wwr.webp',
       link: 'https://worldwiderecords.com.mx'
     },
     {
@@ -23,7 +23,7 @@
       description: 'Proyecto de recopilación musical - Primer volumen de la serie FNC.',
       category: 'Music Project',
       year: '2024',
-      image: '/img/FNCVOL1.png',
+      image: '/img/FNCVOL1.webp',
       link: 'https://funnynoiseclub.com/inicio.html'
     },
     {
@@ -32,7 +32,7 @@
       description: 'Proyecto presentacion de album del artista 2k.',
       category: 'Music Project',
       year: '2024',
-      image: '/img/Mayday.png',
+      image: '/img/Mayday.webp',
       link: 'http://mayday2k.com/'
     },
     {
@@ -41,7 +41,7 @@
       description: 'Proyecto presentacion de album del artista WuichoKun con e-commers.',
       category: 'Music Project',
       year: '2024',
-      image: '/img/WuichoKun.png',
+      image: '/img/WuichoKun.webp',
       link: 'https://wuichokun.com.mx/producto.html?id=cd-verde'
     },
     {
@@ -50,7 +50,7 @@
       description: 'Plataforma de educación financiera y gestión de inversiones personales con e-commers.',
       category: 'Web Application',
       year: '2024',
-      image: '/img/CapitanFinaciero.png',
+      image: '/img/CapitanFinaciero.webp',
       link: 'https://capitanfinanciero.com/'
     },
     {
@@ -59,7 +59,7 @@
       description: 'Landing page con registro y correos automaticos para venta de curso financiero.',
       category: 'Landing Page',
       year: '2024',
-      image: '/img/MundialCF.png',
+      image: '/img/MundialCF.webp',
       link: 'https://mundial.capitanfinanciero.com/'
     },
     {
@@ -68,7 +68,7 @@
       description: 'Landing page con registro para un webinar de capitan financiero con envio de correo automatico.',
       category: 'Landing Page',
       year: '2024',
-      image: '/img/WebinaCf.png',
+      image: '/img/WebinaCf.webp',
       link: 'https://webinar.capitanfinanciero.com/'
     },
     {
@@ -77,7 +77,7 @@
       description: 'Pagina web de empresa cityfront con traduccion a 26 idiomas y deteccion automatica de tu idioma.',
       category: 'Web Application',
       year: '2024',
-      image: '/img/CityFront.png',
+      image: '/img/CityFront.webp',
       link: 'https://www.cityfront.ai/'
     },
     {
@@ -86,7 +86,7 @@
       description: 'Pagina web para empresa Pymera, con formulario completo el cual te dice en donde te puede ayudar la empresa.',
       category: 'Web Application',
       year: '2024',
-      image: '/img/Pymera.png',
+      image: '/img/Pymera.webp',
       link: 'https://pymera.mx/'
     },
     {
@@ -95,7 +95,7 @@
       description: 'Pagina web para promocion del saas de pymera.',
       category: 'Landing Page',
       year: '2024',
-      image: '/img/SaasPymera.png',
+      image: '/img/SaasPymera.webp',
       link: 'https://saas.pymera.mx/'
     },
     {
@@ -104,7 +104,7 @@
       description: 'Saas para granitika junto a pymera.',
       category: 'SaaS',
       year: '2024',
-      image: '/img/SaasGranitika.png',
+      image: '/img/SaasGranitika.webp',
       link: '#'
     },
     {
@@ -113,7 +113,7 @@
       description: 'Pagina web para la empresa codigopostal con dashboard incluido.',
       category: 'Web Application',
       year: '2024',
-      image: '/img/CodigoPostal.png',
+      image: '/img/CodigoPostal.webp',
       link: 'https://codigopostal.mx/'
     },
     {
@@ -122,7 +122,7 @@
       description: 'Landing page para Thermal Coatings donde ofrecen servicios y productos.',
       category: 'Landing Page',
       year: '2024',
-      image: '/img/Thermal Coatings.png',
+      image: '/img/Thermal Coatings.webp',
       link: 'https://recubrimientosmty.com/'
     },
     {
@@ -131,7 +131,7 @@
       description: 'E-commers para tienda de jersey de futbol.',
       category: 'E-commerce',
       year: '2024',
-      image: '/img/Jersix.png',
+      image: '/img/Jersix.webp',
       link: '#'
     }
   ]

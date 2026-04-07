@@ -133,6 +133,15 @@
       year: '2024',
       image: '/img/Jersix.webp',
       link: '#'
+    },
+    {
+      id: 15,
+      title: 'aacruzylopez',
+      description: 'Landing page para empresa de seguros aacruzylopez con cotizacion de fianzas automatica.',
+      category: 'Landing Page',
+      year: '2024',
+      image: '/img/aacruzylopez.webp',
+      link: 'https://www.aacruzylopez.com/fianzas'
     }
   ]
   
